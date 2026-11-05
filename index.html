@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Journey of Love</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        romantic: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        }
+                    },
+                    fontFamily: {
+                        cursive: ['"Dancing Script"', 'cursive'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 8s linear infinite;
+            z-index: 0;
+            opacity: 0.6;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .masonry-grid {
+            columns: 1 sm:2 md:3 lg:4;
+            column-gap: 1.25rem;
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.25rem;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f43f5e;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-red-50 min-h-screen text-slate-800 font-sans relative overflow-x-hidden pb-12">
+
+    <!-- Floating Hearts Background Container -->
+    <div id="heartsContainer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- Main Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-rose-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-200">
+                    <i class="fa-solid fa-heart text-xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="font-cursive text-2xl sm:text-3xl font-bold text-rose-600 leading-none">Oya & Manika</h1>
+                    <p class="text-xs text-rose-400 font-medium">Shared Digital Memory Vault</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="openHelpModal()" class="hidden sm:flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-100 hover:bg-rose-200 rounded-full transition-all">
+                    <i class="fa-brands fa-google-drive"></i>
+                    <span>Drive Guide</span>
+                </button>
+                <button onclick="openAddModal()" class="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold px-4 py-2.5 rounded-full shadow-lg shadow-rose-200 transition-all transform active:scale-95 text-sm">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Add Memory</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Romantic Hero Header -->
+    <section class="relative z-10 text-center py-12 px-4 max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100/80 border border-rose-200 text-rose-700 text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <i class="fa-solid fa-sparkles text-rose-500"></i>
+            <span>Our Shared Memory Gallery</span>
+        </div>
+        
+        <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-3">
+            Two Hearts, One Journey, <span class="bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent font-cursive block sm:inline font-bold">Endless Memories</span>
+        </h2>
+        
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto font-normal leading-relaxed">
+            Every picture holds a story of us — from quiet moments to unforgettable adventures.
+        </p>
+
+        <!-- Stats Bar -->
+        <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-6 sm:gap-12 bg-white/90 backdrop-blur-md px-8 py-4 rounded-3xl shadow-sm border border-rose-100">
+            <div class="text-center">
+                <span id="photoCount" class="text-2xl font-extrabold text-rose-600 block">0</span>
+                <span class="text-xs text-slate-500 font-medium">Memories Saved</span>
+            </div>
+            <div class="h-8 w-px bg-rose-100 hidden sm:block"></div>
+            <div class="text-center">
+                <span class="text-2xl font-extrabold text-rose-600 block">∞</span>
+                <span class="text-xs text-slate-500 font-medium">Love Ahead</span>
+            </div>
+            <div class="h-8 w-px bg-rose-100 hidden sm:block"></div>
+            <div class="text-center">
+                <span id="activeCategoryCount" class="text-2xl font-extrabold text-rose-600 block">5</span>
+                <span class="text-xs text-slate-500 font-medium">Categories</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Controls & Filters Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-white/70 backdrop-blur-sm p-4 rounded-2xl border border-rose-100">
+            <!-- Filter Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="filterPills">
+                <button onclick="setFilter('all')" data-filter="all" class="filter-btn active-filter px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-600 text-white shadow-sm">
+                    <i class="fa-solid fa-heart-pulse mr-1"></i> All
+                </button>
+                <button onclick="setFilter('Dates')" data-filter="Dates" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-50 text-slate-600 hover:bg-rose-100">
+                    <i class="fa-solid fa-wine-glass-side mr-1 text-rose-400"></i> Romantic Dates
+                </button>
+                <button onclick="setFilter('Travel')" data-filter="Travel" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-50 text-slate-600 hover:bg-rose-100">
+                    <i class="fa-solid fa-plane-departure mr-1 text-rose-400"></i> Travels & Adventures
+                </button>
+                <button onclick="setFilter('Milestones')" data-filter="Milestones" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-50 text-slate-600 hover:bg-rose-100">
+                    <i class="fa-solid fa-crown mr-1 text-rose-400"></i> Special Milestones
+                </button>
+                <button onclick="setFilter('Daily')" data-filter="Daily" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-50 text-slate-600 hover:bg-rose-100">
+                    <i class="fa-solid fa-mug-hot mr-1 text-rose-400"></i> Everyday Moments
+                </button>
+            </div>
+
+            <!-- View Switcher & Actions -->
+            <div class="flex items-center justify-between md:justify-end gap-3 border-t md:border-t-0 pt-3 md:pt-0 border-rose-100">
+                <button onclick="openHelpModal()" class="sm:hidden text-xs font-semibold text-rose-600 underline">
+                    Google Drive Guide
+                </button>
+                <div class="bg-rose-100/70 p-1 rounded-xl flex items-center gap-1">
+                    <button onclick="setView('grid')" id="btnGridView" class="p-2 rounded-lg text-rose-600 bg-white shadow-sm transition-all" title="Grid View">
+                        <i class="fa-solid fa-border-all text-xs"></i>
+                    </button>
+                    <button onclick="setView('timeline')" id="btnTimelineView" class="p-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all" title="Timeline View">
+                        <i class="fa-solid fa-timeline text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photos Grid View -->
+        <div id="galleryGrid" class="masonry-grid transition-all duration-300">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+
+        <!-- Photos Timeline View (Hidden by default) -->
+        <div id="galleryTimeline" class="hidden max-w-4xl mx-auto py-6 relative">
+            <div class="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-rose-200"></div>
+            <div id="timelineContainer" class="space-y-8 relative">
+                <!-- Dynamic Timeline Items -->
+            </div>
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="emptyState" class="hidden text-center py-16 bg-white/60 rounded-3xl border border-dashed border-rose-200">
+            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-400 mb-4">
+                <i class="fa-solid fa-images text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700">No Memories Found</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">There are no photos saved under this category yet. Click 'Add Memory' to upload your first moment!</p>
+            <button onclick="openAddModal()" class="mt-4 px-4 py-2 bg-rose-500 text-white rounded-full text-xs font-semibold shadow-md hover:bg-rose-600 transition-all">
+                Add Memory
+            </button>
+        </div>
+    </main>
+
+    <!-- Add Photo Modal -->
+    <div id="addModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-rose-100 relative animate-fadeIn">
+            <button onclick="closeAddModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600 flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center">
+                    <i class="fa-solid fa-camera-retro text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">Add New Memory</h3>
+                    <p class="text-xs text-slate-500">Upload a local file or paste a Google Drive link</p>
+                </div>
+            </div>
+
+            <!-- Tab Switcher (Drive Link vs File Upload) -->
+            <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-xs font-semibold">
+                <button onclick="switchUploadTab('link')" id="tabLink" class="flex-1 py-2 rounded-lg bg-white text-rose-600 shadow-sm transition-all text-center">
+                    <i class="fa-brands fa-google-drive mr-1"></i> Drive / Image Link
+                </button>
+                <button onclick="switchUploadTab('file')" id="tabFile" class="flex-1 py-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all text-center">
+                    <i class="fa-solid fa-upload mr-1"></i> Upload File
+                </button>
+            </div>
+
+            <form id="addPhotoForm" onsubmit="handlePhotoSubmit(event)" class="space-y-4">
+                <!-- Tab Content 1: Google Drive / URL Link -->
+                <div id="inputGroupLink" class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-700 block">Google Drive / Image Link</label>
+                    <input type="url" id="photoUrlInput" placeholder="https://drive.google.com/file/d/..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none text-xs transition-all">
+                    <p class="text-[11px] text-slate-400">Make sure Google Drive files are set to <b>"Anyone with the link can view"</b>.</p>
+                </div>
+
+                <!-- Tab Content 2: File Upload (Hidden by default) -->
+                <div id="inputGroupFile" class="hidden space-y-2">
+                    <label class="text-xs font-semibold text-slate-700 block">Select Photo from Device</label>
+                    <input type="file" id="photoFileInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer">
+                    <p class="text-[11px] text-slate-400">File will be converted & stored locally in your browser storage.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-700 block">Caption / Title *</label>
+                    <input type="text" id="photoCaptionInput" required placeholder="e.g., Beach Sunset Date" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none text-xs transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-700 block">Category *</label>
+                        <select id="photoCategoryInput" required class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none text-xs transition-all bg-white">
+                            <option value="Dates">Romantic Dates</option>
+                            <option value="Travel">Travels & Adventures</option>
+                            <option value="Milestones">Special Milestones</option>
+                            <option value="Daily">Everyday Moments</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-700 block">Date *</label>
+                        <input type="date" id="photoDateInput" required class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none text-xs transition-all bg-white">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-slate-700 block">Location (Optional)</label>
+                    <input type="text" id="photoLocationInput" placeholder="e.g., Mirissa Beach, Sri Lanka" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 outline-none text-xs transition-all">
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="closeAddModal()" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white text-xs font-semibold shadow-md shadow-rose-200 hover:from-rose-600 hover:to-pink-600 transition-all">
+                        Save Memory
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google Drive Help Modal -->
+    <div id="helpModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-rose-100 relative">
+            <button onclick="closeHelpModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-rose-600 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                <i class="fa-brands fa-google-drive text-2xl"></i>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-800 mb-2">How to use Google Drive Links</h3>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Follow these simple steps so both you and your partner can view photos stored in Google Drive:</p>
+
+            <ol class="space-y-3 text-xs text-slate-700 mb-6 font-medium">
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">1</span>
+                    <span>Upload your photo to Google Drive.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">2</span>
+                    <span>Right-click the photo and choose <b>Share ➔ Share</b>.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">3</span>
+                    <span>Under General Access, change option to <b>"Anyone with the link can view"</b>.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">4</span>
+                    <span>Copy link and paste it into the <b>Add Memory</b> form on this app!</span>
+                </li>
+            </ol>
+
+            <button onclick="closeHelpModal()" class="w-full py-2.5 rounded-xl bg-slate-800 text-white text-xs font-semibold hover:bg-slate-900 transition-all">
+                Got It!
+            </button>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-5 right-5 text-white/80 hover:text-white w-10 h-10 rounded-full bg-white/10 flex items-center justify-center z-50">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <button onclick="prevLightboxImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center z-50 transition-all">
+            <i class="fa-solid fa-chevron-left text-lg"></i>
+        </button>
+
+        <button onclick="nextLightboxImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center z-50 transition-all">
+            <i class="fa-solid fa-chevron-right text-lg"></i>
+        </button>
+
+        <div class="max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center relative">
+            <img id="lightboxImg" src="" alt="Memory Full" class="max-h-[70vh] w-auto max-w-full rounded-2xl shadow-2xl object-contain">
+            <div class="text-center mt-4 text-white max-w-xl px-4">
+                <span id="lightboxCategory" class="inline-block px-3 py-1 rounded-full bg-rose-500/80 text-white text-[10px] uppercase font-bold tracking-wider mb-2">Category</span>
+                <h3 id="lightboxCaption" class="text-xl font-bold">Caption Title</h3>
+                <div class="flex items-center justify-center gap-4 text-xs text-rose-200 mt-2 font-medium">
+                    <span id="lightboxDate"><i class="fa-regular fa-calendar mr-1"></i> Date</span>
+                    <span id="lightboxLocation"><i class="fa-solid fa-location-dot mr-1"></i> Location</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Default Romantic Preloaded Samples
+        const initialPhotos = [
+            {
+                id: 'sample-1',
+                url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80',
+                caption: 'Sunset Beach Walk',
+                category: 'Dates',
+                date: '2024-02-14',
+                location: 'Bentota Beach'
+            },
+            {
+                id: 'sample-2',
+                url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
+                caption: 'Exploring Mountain Trails',
+                category: 'Travel',
+                date: '2024-05-10',
+                location: 'Ella, Sri Lanka'
+            },
+            {
+                id: 'sample-3',
+                url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+                caption: 'Candlelight Dinner Anniversary',
+                category: 'Milestones',
+                date: '2024-10-12',
+                location: 'Colombo'
+            },
+            {
+                id: 'sample-4',
+                url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80',
+                caption: 'Cozy Morning Coffee',
+                category: 'Daily',
+                date: '2024-11-01',
+                location: 'Home Sweet Home'
+            }
+        ];
+
+        // Global State
+        let photos = [];
+        let activeFilter = 'all';
+        let activeView = 'grid';
+        let activeUploadTab = 'link';
+        let currentLightboxIndex = 0;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPhotos();
+            renderFloatingHearts();
+            renderGallery();
+            
+            // Default date picker to today
+            document.getElementById('photoDateInput').valueAsDate = new Date();
+        });
+
+        // Load Photos from LocalStorage
+        function loadPhotos() {
+            const stored = localStorage.getItem('love_journey_photos');
+            if (stored) {
+                try {
+                    photos = JSON.parse(stored);
+                } catch (e) {
+                    photos = [...initialPhotos];
+                }
+            } else {
+                photos = [...initialPhotos];
+                savePhotos();
+            }
+        }
+
+        // Save Photos to LocalStorage
+        function savePhotos() {
+            localStorage.setItem('love_journey_photos', JSON.stringify(photos));
+        }
+
+        // Convert Google Drive Share URL to Direct Image View URL
+        function convertDriveUrl(url) {
+            if (!url) return '';
+            const driveRegex = /(?:https?:\/\/)?(?:drive|docs)\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/;
+            const match = url.match(driveRegex);
+            if (match && match[1]) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}=s1600`;
+            }
+            return url;
+        }
+
+        // Floating Hearts Background Effect
+        function renderFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const icons = ['fa-heart', 'fa-sparkles', 'fa-heart font-bold'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart text-rose-300';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 8}s`;
+                heart.style.fontSize = `${Math.random() * 16 + 12}px`;
+                heart.innerHTML = `<i class="fa-solid ${icons[Math.floor(Math.random() * icons.length)]}"></i>`;
+                container.appendChild(heart);
+            }
+        }
+
+        // Render Gallery based on current state
+        function renderGallery() {
+            const filtered = activeFilter === 'all' 
+                ? photos 
+                : photos.filter(p => p.category === activeFilter);
+
+            // Update Stats
+            document.getElementById('photoCount').textContent = photos.length;
+
+            const grid = document.getElementById('galleryGrid');
+            const timeline = document.getElementById('galleryTimeline');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                document.getElementById('timelineContainer').innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            if (activeView === 'grid') {
+                grid.classList.remove('hidden');
+                timeline.classList.add('hidden');
+                renderGridView(filtered);
+            } else {
+                grid.classList.add('hidden');
+                timeline.classList.remove('hidden');
+                renderTimelineView(filtered);
+            }
+        }
+
+        // Render Masonry Grid View
+        function renderGridView(items) {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = items.map((item, index) => `
+                <div class="masonry-item group relative rounded-2xl overflow-hidden bg-white border border-rose-100 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <img src="${item.url}" alt="${item.caption}" class="w-full h-auto object-cover cursor-pointer" onclick="openLightbox(${index})" onerror="this.src='https://via.placeholder.com/600x400?text=Photo+Unavailable'">
+                    
+                    <!-- Overlay Info -->
+                    <div class="p-4 bg-gradient-to-t from-white via-white/90 to-transparent">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">
+                                ${item.category}
+                            </span>
+                            <span class="text-[11px] text-slate-400 font-medium">
+                                <i class="fa-regular fa-calendar text-[10px] mr-1"></i>${item.date}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm leading-snug group-hover:text-rose-600 transition-colors">${item.caption}</h4>
+                        ${item.location ? `
+                            <p class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot text-rose-400 text-[10px]"></i>
+                                <span>${item.location}</span>
+                            </p>
+                        ` : ''}
+                    </div>
+
+                    <!-- Delete Button -->
+                    <button onclick="deletePhoto('${item.id}')" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-slate-900/60 hover:bg-rose-600 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity" title="Delete Memory">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Render Timeline View
+        function renderTimelineView(items) {
+            // Sort items by date descending
+            const sorted = [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const container = document.getElementById('timelineContainer');
+
+            container.innerHTML = sorted.map((item, index) => `
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 group">
+                    <div class="w-full sm:w-1/2 ${index % 2 === 0 ? 'sm:text-right sm:order-1' : 'sm:order-2'}">
+                        <div class="bg-white p-4 rounded-2xl border border-rose-100 shadow-sm hover:shadow-md transition-all inline-block text-left w-full">
+                            <img src="${item.url}" alt="${item.caption}" class="w-full h-48 object-cover rounded-xl mb-3 cursor-pointer" onclick="openLightbox(${index})">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">
+                                ${item.category}
+                            </span>
+                            <h4 class="font-bold text-slate-800 text-sm mt-1">${item.caption}</h4>
+                            <p class="text-xs text-slate-500 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Center Timeline Node -->
+                    <div class="w-8 h-8 rounded-full bg-rose-500 border-4 border-rose-100 text-white flex items-center justify-center text-xs font-bold z-10 flex-shrink-0 shadow-md">
+                        <i class="fa-solid fa-heart text-[10px]"></i>
+                    </div>
+
+                    <div class="w-full sm:w-1/2 ${index % 2 === 0 ? 'sm:order-2' : 'sm:order-1 sm:text-right'} hidden sm:block">
+                        <span class="text-xs font-bold text-rose-400 bg-rose-50 px-3 py-1 rounded-full border border-rose-100">${item.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Switcher
+        function setFilter(category) {
+            activeFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = 'filter-btn active-filter px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-600 text-white shadow-sm';
+                } else {
+                    btn.className = 'filter-btn px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap bg-rose-50 text-slate-600 hover:bg-rose-100';
+                }
+            });
+            renderGallery();
+        }
+
+        // View Switcher (Grid vs Timeline)
+        function setView(view) {
+            activeView = view;
+            const btnGrid = document.getElementById('btnGridView');
+            const btnTimeline = document.getElementById('btnTimelineView');
+
+            if (view === 'grid') {
+                btnGrid.className = 'p-2 rounded-lg text-rose-600 bg-white shadow-sm transition-all';
+                btnTimeline.className = 'p-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all';
+            } else {
+                btnTimeline.className = 'p-2 rounded-lg text-rose-600 bg-white shadow-sm transition-all';
+                btnGrid.className = 'p-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all';
+            }
+            renderGallery();
+        }
+
+        // Modal Handling
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.getElementById('addPhotoForm').reset();
+        }
+
+        function openHelpModal() {
+            document.getElementById('helpModal').classList.remove('hidden');
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').classList.add('hidden');
+        }
+
+        // Tab Switching in Add Modal
+        function switchUploadTab(tab) {
+            activeUploadTab = tab;
+            const tabLink = document.getElementById('tabLink');
+            const tabFile = document.getElementById('tabFile');
+            const groupLink = document.getElementById('inputGroupLink');
+            const groupFile = document.getElementById('inputGroupFile');
+
+            if (tab === 'link') {
+                tabLink.className = 'flex-1 py-2 rounded-lg bg-white text-rose-600 shadow-sm transition-all text-center';
+                tabFile.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all text-center';
+                groupLink.classList.remove('hidden');
+                groupFile.classList.add('hidden');
+            } else {
+                tabFile.className = 'flex-1 py-2 rounded-lg bg-white text-rose-600 shadow-sm transition-all text-center';
+                tabLink.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-rose-600 transition-all text-center';
+                groupFile.classList.remove('hidden');
+                groupLink.classList.add('hidden');
+            }
+        }
+
+        // Handle Add Photo Submit
+        function handlePhotoSubmit(e) {
+            e.preventDefault();
+
+            const caption = document.getElementById('photoCaptionInput').value.trim();
+            const category = document.getElementById('photoCategoryInput').value;
+            const date = document.getElementById('photoDateInput').value;
+            const location = document.getElementById('photoLocationInput').value.trim();
+
+            if (activeUploadTab === 'link') {
+                const rawUrl = document.getElementById('photoUrlInput').value.trim();
+                if (!rawUrl) {
+                    alert('Please enter a valid Google Drive or Image link.');
+                    return;
+                }
+                const convertedUrl = convertDriveUrl(rawUrl);
+                addPhotoItem({ url: convertedUrl, caption, category, date, location });
+            } else {
+                const fileInput = document.getElementById('photoFileInput');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please choose an image file from your device.');
+                    return;
+                }
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    addPhotoItem({ url: event.target.result, caption, category, date, location });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addPhotoItem(photoData) {
+            const newPhoto = {
+                id: 'photo-' + Date.now(),
+                ...photoData
+            };
+
+            photos.unshift(newPhoto);
+            savePhotos();
+            renderGallery();
+            closeAddModal();
+        }
+
+        // Delete Photo
+        function deletePhoto(id) {
+            if (confirm('Are you sure you want to delete this memory?')) {
+                photos = photos.filter(p => p.id !== id);
+                savePhotos();
+                renderGallery();
+            }
+        }
+
+        // Lightbox Functions
+        function openLightbox(index) {
+            const filtered = activeFilter === 'all' 
+                ? photos 
+                : photos.filter(p => p.category === activeFilter);
+
+            currentLightboxIndex = index;
+            const item = filtered[index];
+
+            if (!item) return;
+
+            document.getElementById('lightboxImg').src = item.url;
+            document.getElementById('lightboxCaption').textContent = item.caption;
+            document.getElementById('lightboxCategory').textContent = item.category;
+            document.getElementById('lightboxDate').innerHTML = `<i class="fa-regular fa-calendar mr-1"></i>${item.date}`;
+            document.getElementById('lightboxLocation').innerHTML = item.location ? `<i class="fa-solid fa-location-dot mr-1"></i>${item.location}` : '';
+
+            document.getElementById('lightboxModal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+        }
+
+        function nextLightboxImage() {
+            const filtered = activeFilter === 'all' 
+                ? photos 
+                : photos.filter(p => p.category === activeFilter);
+            currentLightboxIndex = (currentLightboxIndex + 1) % filtered.length;
+            openLightbox(currentLightboxIndex);
+        }
+
+        function prevLightboxImage() {
+            const filtered = activeFilter === 'all' 
+                ? photos 
+                : photos.filter(p => p.category === activeFilter);
+            currentLightboxIndex = (currentLightboxIndex - 1 + filtered.length) % filtered.length;
+            openLightbox(currentLightboxIndex);
+        }
+    </script>
+</body>
+</html>
